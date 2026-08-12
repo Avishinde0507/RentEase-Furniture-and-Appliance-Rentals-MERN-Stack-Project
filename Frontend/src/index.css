@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #ff4d4d;
+  --primary-dark: #e63e3e;
+  --secondary: #2d3436;
+  --accent: #fdcb6e;
+  --bg-light: #f8f9fa;
+  --text-dark: #1e272e;
+  --text-muted: #636e72;
+}
+
+@layer base {
+  body {
+    @apply font-['Outfit'] bg-slate-50 text-slate-900;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-[var(--primary)] text-white px-6 py-3 rounded-lg font-semibold hover:bg-[var(--primary-dark)] transition-all duration-300 shadow-lg shadow-red-500/20 active:scale-95;
+  }
+  .btn-outline {
+    @apply border-2 border-[var(--primary)] text-[var(--primary)] px-6 py-3 rounded-lg font-semibold hover:bg-[var(--primary)] hover:text-white transition-all duration-300 active:scale-95;
+  }
+  .card {
+    @apply bg-white rounded-2xl p-6 shadow-sm border border-slate-100 hover:shadow-xl transition-all duration-500;
+  }
+  .input-field {
+    @apply w-full px-4 py-3 rounded-lg border border-slate-200 focus:outline-none focus:ring-2 focus:ring-red-500/20 focus:border-[var(--primary)] transition-all;
+  }
+  .section-title {
+    @apply text-3xl md:text-4xl font-bold text-slate-900 mb-4;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-slate-100;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-slate-300 rounded-full hover:bg-slate-400 transition-all;
+}
+
+/* Glassmorphism utility */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
