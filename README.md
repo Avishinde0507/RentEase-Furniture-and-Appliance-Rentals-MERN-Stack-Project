@@ -1,4 +1,4 @@
-# 🏠🪑 RentEase—Furniture & Appliance Rentals-MERN Stack Rental Platform
+# 🏠🪑 RentEase-Furniture & Appliance Rentals-MERN Stack Rental Platform
 
 A full-stack rental management web application built with the **MERN** stack (MongoDB, Express.js, React, Node.js).
 
