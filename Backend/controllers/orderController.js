@@ -63,7 +63,7 @@ exports.sendOrderConfirmation = async (req, res) => {
                         <div style="text-align: center; margin-top: 40px; border-top: 1px solid #e2e8f0; pt: 30px;">
                             <p style="color: #1e293b; font-weight: bold; margin-bottom: 5px;">Thank you for renting with us!</p>
                             <p style="color: #64748b; font-size: 14px;">Visit again for more premium products.</p>
-                            <a href="http://localhost:5173" style="display: inline-block; background-color: #ff4d4d; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 12px; font-weight: bold; margin-top: 20px;">Browse More</a>
+                            <a href="${process.env.CLIENT_URL || 'http://localhost:5173'}" style="display: inline-block; background-color: #ff4d4d; color: #ffffff; padding: 12px 30px; text-decoration: none; border-radius: 12px; font-weight: bold; margin-top: 20px;">Browse More</a>
                         </div>
                     </div>
                     
