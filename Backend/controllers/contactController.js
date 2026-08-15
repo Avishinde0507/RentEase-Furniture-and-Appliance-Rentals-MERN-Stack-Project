@@ -1,12 +1,4 @@
-const nodemailer = require('nodemailer');
-
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    }
-});
+const { sendMail } = require('../services/emailService');
 
 // @desc    Send contact form message to support email and confirmation to sender
 // @route   POST /api/contact/send
@@ -74,10 +66,10 @@ exports.sendContactMessage = async (req, res) => {
         };
 
         // Send emails asynchronously
-        await transporter.sendMail(adminMailOptions);
+        await sendMail(adminMailOptions);
         
         // Attempt confirmation email to customer (catch silently if invalid customer email format)
-        transporter.sendMail(userMailOptions).catch(err => {
+        sendMail(userMailOptions).catch(err => {
             console.warn('Customer auto-reply failed:', err.message);
         });
 

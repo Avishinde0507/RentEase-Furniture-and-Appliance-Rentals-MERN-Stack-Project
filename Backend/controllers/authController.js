@@ -1,26 +1,20 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
-const nodemailer = require('nodemailer');
+const { sendMail } = require('../services/emailService');
 const { formatIndianMobileNumber, sendMobileOTP, verifyMobileOTP } = require('../services/twilioService');
 
 const generateToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
 };
 
-// Email Transporter
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    }
-});
-
 // @desc    Send OTP to Email
 // @route   POST /api/auth/send-email-otp
 exports.sendEmailOTP = async (req, res) => {
     try {
-        const { email } = req.body;
+        const email = req.body.email?.trim().toLowerCase();
+        if (!email) {
+            return res.status(400).json({ message: 'Email address is required' });
+        }
         
         const userExists = await User.findOne({ email });
         if (userExists) return res.status(400).json({ message: 'User already exists with this email' });
@@ -38,7 +32,6 @@ exports.sendEmailOTP = async (req, res) => {
         }
 
         const mailOptions = {
-            from: process.env.EMAIL_USER,
             to: email,
             subject: 'RentEase - Verify Your Account',
             html: `
@@ -53,7 +46,7 @@ exports.sendEmailOTP = async (req, res) => {
             `
         };
         
-        await transporter.sendMail(mailOptions);
+        await sendMail(mailOptions);
         console.log('✅ Email sent successfully to:', email);
         
         res.json({ 
@@ -62,8 +55,8 @@ exports.sendEmailOTP = async (req, res) => {
             otp: otp 
         });
     } catch (error) {
-        console.error('Email Error:', error);
-        res.status(500).json({ message: 'Failed to send verification email. Please check your inbox or try again.' });
+        console.error('Email Error:', error.message || error);
+        res.status(500).json({ message: error.message || 'Failed to send verification email. Please check your inbox or try again.' });
     }
 };
 
@@ -267,7 +260,7 @@ exports.changePassword = async (req, res) => {
 // @route   POST /api/auth/forgot-password-otp
 exports.forgotPasswordOTP = async (req, res) => {
     try {
-        const { email } = req.body;
+        const email = req.body.email?.trim().toLowerCase();
         if (!email) return res.status(400).json({ message: 'Email is required' });
 
         const user = await User.findOne({ email });
@@ -281,7 +274,6 @@ exports.forgotPasswordOTP = async (req, res) => {
         }
 
         const mailOptions = {
-            from: process.env.EMAIL_USER,
             to: email,
             subject: 'RentEase - Password Reset Code',
             html: `
@@ -296,13 +288,13 @@ exports.forgotPasswordOTP = async (req, res) => {
             `
         };
 
-        await transporter.sendMail(mailOptions);
+        await sendMail(mailOptions);
         console.log(`✅ Forgot-password OTP sent to ${email}`);
 
         res.json({ success: true, message: 'Reset code sent to your email!', otp });
     } catch (error) {
-        console.error('Forgot Password OTP Error:', error);
-        res.status(500).json({ message: 'Failed to send reset email. Please try again.' });
+        console.error('Forgot Password OTP Error:', error.message || error);
+        res.status(500).json({ message: error.message || 'Failed to send reset email. Please try again.' });
     }
 };
 

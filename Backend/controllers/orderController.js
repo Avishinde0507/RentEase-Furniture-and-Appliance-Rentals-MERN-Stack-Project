@@ -1,16 +1,5 @@
-const nodemailer = require('nodemailer');
 const Order = require('../models/Order');
-
-// Email Transporter (Same as authController)
-const transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false, // Use STARTTLS
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    }
-});
+const { sendMail } = require('../services/emailService');
 
 // @desc    Send Order Confirmation Email
 // @route   POST /api/orders/send-confirmation
@@ -74,7 +63,7 @@ exports.sendOrderConfirmation = async (req, res) => {
             `
         };
 
-        await transporter.sendMail(mailOptions);
+        await sendMail(mailOptions);
         console.log(`✅ Order Confirmation Email sent to: ${userEmail}`);
         res.json({ success: true, message: 'Confirmation email sent successfully' });
     } catch (error) {
