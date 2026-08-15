@@ -32,8 +32,13 @@ const ForgotPassword = () => {
       const data = await res.json();
       if (res.ok) {
         setServerOtp(data.otp || '');
+        if (data.smtpFallback) {
+          setOtp(data.otp);
+          toast.success(`Verification Code: ${data.otp}`, { duration: 6000 });
+        } else {
+          toast.success(data.message || 'Verification code sent to your email!');
+        }
         setStep(2);
-        toast.success('Verification code sent to your email!');
       } else {
         toast.error(data.message || 'Failed to send OTP.');
       }

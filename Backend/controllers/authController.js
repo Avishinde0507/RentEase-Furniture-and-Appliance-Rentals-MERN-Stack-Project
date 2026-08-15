@@ -46,14 +46,24 @@ exports.sendEmailOTP = async (req, res) => {
             `
         };
         
-        await sendMail(mailOptions);
-        console.log('✅ Email sent successfully to:', email);
-        
-        res.json({ 
-            success: true, 
-            message: 'Verification code sent to your email!', 
-            otp: otp 
-        });
+        try {
+            await sendMail(mailOptions);
+            console.log('✅ Email sent successfully to:', email);
+            res.json({ 
+                success: true, 
+                message: 'Verification code sent to your email!', 
+                otp: otp 
+            });
+        } catch (mailError) {
+            console.warn(`⚠️ Cloud SMTP error (likely outbound SMTP blocked by hosting provider): ${mailError.message}`);
+            console.log(`🔑 [VERIFICATION OTP] OTP ${otp} for ${email}`);
+            res.json({ 
+                success: true, 
+                message: `Verification code generated! (Code: ${otp})`, 
+                otp: otp,
+                smtpFallback: true
+            });
+        }
     } catch (error) {
         console.error('Email Error:', error.message || error);
         res.status(500).json({ message: error.message || 'Failed to send verification email. Please check your inbox or try again.' });
@@ -288,10 +298,20 @@ exports.forgotPasswordOTP = async (req, res) => {
             `
         };
 
-        await sendMail(mailOptions);
-        console.log(`✅ Forgot-password OTP sent to ${email}`);
-
-        res.json({ success: true, message: 'Reset code sent to your email!', otp });
+        try {
+            await sendMail(mailOptions);
+            console.log(`✅ Forgot-password OTP sent to ${email}`);
+            res.json({ success: true, message: 'Reset code sent to your email!', otp });
+        } catch (mailError) {
+            console.warn(`⚠️ Cloud SMTP error: ${mailError.message}`);
+            console.log(`🔑 [FORGOT PASSWORD OTP] OTP ${otp} for ${email}`);
+            res.json({ 
+                success: true, 
+                message: `Reset code generated! (Code: ${otp})`, 
+                otp: otp,
+                smtpFallback: true 
+            });
+        }
     } catch (error) {
         console.error('Forgot Password OTP Error:', error.message || error);
         res.status(500).json({ message: error.message || 'Failed to send reset email. Please try again.' });

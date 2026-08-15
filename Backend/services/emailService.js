@@ -1,10 +1,20 @@
 const nodemailer = require('nodemailer');
+const dns = require('dns');
+
+// Force IPv4 lookup globally
+if (dns.setDefaultResultOrder) {
+    dns.setDefaultResultOrder('ipv4first');
+}
 
 const getCleanEmailCredentials = () => {
     return {
         user: (process.env.EMAIL_USER || '').trim(),
         pass: (process.env.EMAIL_PASS || '').replace(/\s+/g, '') // remove spaces from Google App Password
     };
+};
+
+const customDnsLookup = (hostname, options, callback) => {
+    return dns.lookup(hostname, { family: 4 }, callback);
 };
 
 const createPrimaryTransporter = () => {
@@ -17,10 +27,11 @@ const createPrimaryTransporter = () => {
             user: creds.user,
             pass: creds.pass
         },
-        family: 4, // Force IPv4 (essential for Render / Cloud hosting)
-        connectionTimeout: 10000,
-        greetingTimeout: 10000,
-        socketTimeout: 15000,
+        family: 4,
+        lookup: customDnsLookup,
+        connectionTimeout: 5000,
+        greetingTimeout: 5000,
+        socketTimeout: 8000,
         tls: {
             rejectUnauthorized: false
         }
@@ -38,9 +49,10 @@ const createFallbackTransporter = () => {
             pass: creds.pass
         },
         family: 4,
-        connectionTimeout: 10000,
-        greetingTimeout: 10000,
-        socketTimeout: 15000,
+        lookup: customDnsLookup,
+        connectionTimeout: 5000,
+        greetingTimeout: 5000,
+        socketTimeout: 8000,
         tls: {
             rejectUnauthorized: false
         }
