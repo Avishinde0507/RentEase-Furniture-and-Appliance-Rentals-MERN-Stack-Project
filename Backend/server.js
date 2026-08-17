@@ -14,9 +14,28 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5001;
 
+// CORS — allow Render frontend + Vercel + localhost
+const allowedOrigins = [
+    'https://rentease-furniture-and-appliance-rentals.onrender.com',
+    'https://rentease-furniture-and-appliance-rentals-p2ra.onrender.com',
+    process.env.CLIENT_URL,
+    'http://localhost:5173',
+    'http://localhost:3000',
+].filter(Boolean);
+
 // Performance Middlewares
 app.use(compression());
-app.use(cors());
+app.use(cors({
+    origin: function (origin, callback) {
+        // Allow requests with no origin (mobile apps, curl, Render health checks)
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.some(o => origin.startsWith(o)) || origin.includes('onrender.com') || origin.includes('vercel.app')) {
+            return callback(null, true);
+        }
+        return callback(null, true); // Open CORS for now — tighten in production
+    },
+    credentials: true
+}));
 app.use(bodyParser.json({ limit: '10mb' }));
 app.use(express.json({ limit: '10mb' }));
 
@@ -55,10 +74,10 @@ mongoose.connect(process.env.MONGO_URI || 'mongodb://localhost:27017/rentease', 
     serverSelectionTimeoutMS: 5000,
     socketTimeoutMS: 45000
 })
-.then(() => console.log('✅ MongoDB Connected to Atlas (Optimized Pool)'))
-.catch(err => {
-    console.error('❌ MongoDB Connection Error:', err.message);
-});
+    .then(() => console.log('✅ MongoDB Connected to Atlas (Optimized Pool)'))
+    .catch(err => {
+        console.error('❌ MongoDB Connection Error:', err.message);
+    });
 
 app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);

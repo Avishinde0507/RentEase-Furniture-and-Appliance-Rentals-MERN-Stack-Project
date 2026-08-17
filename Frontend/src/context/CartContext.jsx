@@ -8,8 +8,13 @@ export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
 
   const getStorageKey = () => {
-    const userData = JSON.parse(localStorage.getItem('userData'));
-    return userData ? `rentease_cart_${userData.email}` : 'rentease_cart';
+    try {
+      const raw = localStorage.getItem('userData');
+      const userData = raw ? JSON.parse(raw) : null;
+      return userData?.email ? `rentease_cart_${userData.email}` : 'rentease_cart';
+    } catch {
+      return 'rentease_cart';
+    }
   };
 
   // Load cart on mount and listen for storage changes
@@ -43,10 +48,10 @@ export const CartProvider = ({ children }) => {
       // Check if item already exists with same tenure
       const existingItem = prev.find(item => item.id === product.id && item.tenure === tenure);
       if (existingItem) {
-        return prev.map(item => 
-          (item.id === product.id && item.tenure === tenure) 
-          ? { ...item, quantity: item.quantity + 1 } 
-          : item
+        return prev.map(item =>
+          (item.id === product.id && item.tenure === tenure)
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
         );
       }
       return [...prev, { ...product, tenure, rent, quantity: 1 }];
@@ -59,10 +64,10 @@ export const CartProvider = ({ children }) => {
 
   const updateQuantity = (id, tenure, quantity) => {
     if (quantity < 1) return;
-    setCartItems(prev => prev.map(item => 
-      (item.id === id && item.tenure === tenure) 
-      ? { ...item, quantity } 
-      : item
+    setCartItems(prev => prev.map(item =>
+      (item.id === id && item.tenure === tenure)
+        ? { ...item, quantity }
+        : item
     ));
   };
 
@@ -72,8 +77,8 @@ export const CartProvider = ({ children }) => {
   const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ 
-      cartItems, addToCart, removeFromCart, updateQuantity, clearCart, cartTotal, cartCount 
+    <CartContext.Provider value={{
+      cartItems, addToCart, removeFromCart, updateQuantity, clearCart, cartTotal, cartCount
     }}>
       {children}
     </CartContext.Provider>

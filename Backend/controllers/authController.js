@@ -15,19 +15,19 @@ exports.sendEmailOTP = async (req, res) => {
         if (!email) {
             return res.status(400).json({ message: 'Email address is required' });
         }
-        
+
         const userExists = await User.findOne({ email });
         if (userExists) return res.status(400).json({ message: 'User already exists with this email' });
 
         const otp = Math.floor(100000 + Math.random() * 900000).toString();
-        
+
         if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
             console.log(`[AUTH ERROR] SMTP credentials missing in .env. Falling back to console log.`);
             console.log(`[VERIFICATION CODE] OTP ${otp} for ${email}`);
-            return res.json({ 
-                success: true, 
-                message: 'Developer Mode: Check server console for code.', 
-                otp: otp 
+            return res.json({
+                success: true,
+                message: 'Developer Mode: Check server console for code.',
+                otp: otp
             });
         }
 
@@ -45,21 +45,21 @@ exports.sendEmailOTP = async (req, res) => {
                 </div>
             `
         };
-        
+
         try {
             await sendMail(mailOptions);
             console.log('✅ Email sent successfully to:', email);
-            res.json({ 
-                success: true, 
-                message: 'Verification code sent to your email!', 
-                otp: otp 
+            res.json({
+                success: true,
+                message: 'Verification code sent to your email!',
+                otp: otp
             });
         } catch (mailError) {
             console.warn(`⚠️ Cloud SMTP error (likely outbound SMTP blocked by hosting provider): ${mailError.message}`);
             console.log(`🔑 [VERIFICATION OTP] OTP ${otp} for ${email}`);
-            res.json({ 
-                success: true, 
-                message: `Verification code generated! (Code: ${otp})`, 
+            res.json({
+                success: true,
+                message: `Verification code generated! (Code: ${otp})`,
                 otp: otp,
                 smtpFallback: true
             });
@@ -163,7 +163,7 @@ exports.verifyMobileOTP = async (req, res) => {
 exports.register = async (req, res) => {
     try {
         const { name, email, mobile, password, otp, verifiedOtp } = req.body;
-        
+
         if (otp && verifiedOtp && otp.toString().trim() !== verifiedOtp.toString().trim()) {
             return res.status(400).json({ message: 'Invalid OTP. Please try again.' });
         }
@@ -171,12 +171,12 @@ exports.register = async (req, res) => {
         const userExists = await User.findOne({ $or: [{ email }, { mobile }] });
         if (userExists) return res.status(400).json({ message: 'User already exists with this email or mobile' });
 
-        const user = await User.create({ 
-            name, 
-            email, 
-            mobile, 
+        const user = await User.create({
+            name,
+            email,
+            mobile,
             password,
-            isVerified: true 
+            isVerified: true
         });
 
         res.status(201).json({
@@ -305,11 +305,11 @@ exports.forgotPasswordOTP = async (req, res) => {
         } catch (mailError) {
             console.warn(`⚠️ Cloud SMTP error: ${mailError.message}`);
             console.log(`🔑 [FORGOT PASSWORD OTP] OTP ${otp} for ${email}`);
-            res.json({ 
-                success: true, 
-                message: `Reset code generated! (Code: ${otp})`, 
+            res.json({
+                success: true,
+                message: `Reset code generated! (Code: ${otp})`,
                 otp: otp,
-                smtpFallback: true 
+                smtpFallback: true
             });
         }
     } catch (error) {
@@ -348,7 +348,7 @@ exports.updateProfile = async (req, res) => {
         if (!email) return res.status(400).json({ message: 'Email is required to update profile' });
 
         let user = await User.findOne({ email });
-        
+
         if (!user) {
             user = new User({
                 name: name || 'User',

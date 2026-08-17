@@ -14,10 +14,18 @@ export const ProductProvider = ({ children }) => {
   const fetchProducts = async () => {
     try {
       const response = await fetch(BASE_URL);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch products: ${response.status}`);
+      }
       const data = await response.json();
-      setProducts(data);
+      if (Array.isArray(data)) {
+        setProducts(data);
+      } else {
+        setProducts([]);
+      }
     } catch (error) {
       console.error('Error fetching products:', error);
+      setProducts([]);
     } finally {
       setLoading(false);
     }
@@ -34,7 +42,7 @@ export const ProductProvider = ({ children }) => {
 
       const response = await fetch(BASE_URL, {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
@@ -58,7 +66,7 @@ export const ProductProvider = ({ children }) => {
 
       const response = await fetch(`${BASE_URL}/${id}`, {
         method: 'DELETE',
-        headers: { 
+        headers: {
           'Authorization': `Bearer ${token}`
         }
       });
@@ -77,7 +85,7 @@ export const ProductProvider = ({ children }) => {
 
       const response = await fetch(`${BASE_URL}/${id}`, {
         method: 'PUT',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },

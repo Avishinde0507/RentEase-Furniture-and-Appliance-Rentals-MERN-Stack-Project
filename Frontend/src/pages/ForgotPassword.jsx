@@ -122,13 +122,12 @@ const ForgotPassword = () => {
             {[1, 2, 3].map(s => (
               <div
                 key={s}
-                className={`rounded-full transition-all duration-300 ${
-                  s === step
+                className={`rounded-full transition-all duration-300 ${s === step
                     ? 'w-8 h-2.5 bg-[var(--primary)]'
                     : s < step
-                    ? 'w-2.5 h-2.5 bg-emerald-500'
-                    : 'w-2.5 h-2.5 bg-slate-200'
-                }`}
+                      ? 'w-2.5 h-2.5 bg-emerald-500'
+                      : 'w-2.5 h-2.5 bg-slate-200'
+                  }`}
               />
             ))}
           </div>

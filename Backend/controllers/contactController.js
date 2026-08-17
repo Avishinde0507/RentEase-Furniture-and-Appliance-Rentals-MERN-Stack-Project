@@ -67,7 +67,7 @@ exports.sendContactMessage = async (req, res) => {
 
         // Send emails asynchronously
         await sendMail(adminMailOptions);
-        
+
         // Attempt confirmation email to customer (catch silently if invalid customer email format)
         sendMail(userMailOptions).catch(err => {
             console.warn('Customer auto-reply failed:', err.message);

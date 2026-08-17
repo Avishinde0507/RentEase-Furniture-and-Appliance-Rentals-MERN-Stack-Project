@@ -74,7 +74,7 @@ const Register = () => {
         localStorage.setItem('isLoggedIn', 'true');
         localStorage.setItem('userRole', 'user');
         localStorage.setItem('userData', JSON.stringify(data));
-        
+
         clearWishlist();
         clearCart();
 
@@ -104,7 +104,7 @@ const Register = () => {
 
   return (
     <div className="min-h-screen pt-32 pb-20 flex items-center justify-center bg-slate-50 px-4">
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         className="max-w-2xl w-full bg-white rounded-[2.5rem] p-10 md:p-16 shadow-xl shadow-slate-200/50 border border-slate-100"
@@ -113,7 +113,7 @@ const Register = () => {
           <div className="hidden md:block">
             <h2 className="text-4xl font-bold text-slate-900 mb-6">Join the <br /> <span className="text-[var(--primary)]">Rental Revolution</span></h2>
             <p className="text-slate-500 mb-10 leading-relaxed">Create an account to start renting premium furniture and appliances with zero commitment.</p>
-            
+
             <div className="space-y-6">
               {[
                 { icon: <ShieldCheck />, title: 'Secure Identity', desc: 'Your data is encrypted' },
@@ -142,14 +142,14 @@ const Register = () => {
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Full Name</label>
                   <div className="relative">
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       name="name"
                       required
                       value={formData.name}
                       onChange={handleChange}
-                      placeholder="Enter your name" 
-                      className="input-field pl-12" 
+                      placeholder="Enter your name"
+                      className="input-field pl-12"
                     />
                     <User className="absolute left-4 top-3.5 text-slate-400 w-5 h-5" />
                   </div>
@@ -158,14 +158,14 @@ const Register = () => {
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Email Address</label>
                   <div className="relative">
-                    <input 
-                      type="email" 
+                    <input
+                      type="email"
                       name="email"
                       required
                       value={formData.email}
                       onChange={handleChange}
-                      placeholder="john@example.com" 
-                      className="input-field pl-12" 
+                      placeholder="john@example.com"
+                      className="input-field pl-12"
                     />
                     <Mail className="absolute left-4 top-3.5 text-slate-400 w-5 h-5" />
                   </div>
@@ -174,14 +174,14 @@ const Register = () => {
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Mobile Number</label>
                   <div className="relative">
-                    <input 
-                      type="tel" 
+                    <input
+                      type="tel"
                       name="mobile"
                       required
                       value={formData.mobile}
                       onChange={handleChange}
-                      placeholder="9876543210" 
-                      className="input-field pl-12" 
+                      placeholder="9876543210"
+                      className="input-field pl-12"
                     />
                     <Phone className="absolute left-4 top-3.5 text-slate-400 w-5 h-5" />
                   </div>
@@ -190,17 +190,17 @@ const Register = () => {
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-slate-500 uppercase tracking-wider ml-1">Password</label>
                   <div className="relative">
-                    <input 
-                      type={showPassword ? 'text' : 'password'} 
+                    <input
+                      type={showPassword ? 'text' : 'password'}
                       name="password"
                       required
                       value={formData.password}
                       onChange={handleChange}
-                      placeholder="••••••••" 
-                      className="input-field pl-12 pr-12" 
+                      placeholder="••••••••"
+                      className="input-field pl-12 pr-12"
                     />
                     <Lock className="absolute left-4 top-3.5 text-slate-400 w-5 h-5" />
-                    <button 
+                    <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute right-4 top-3.5 text-slate-400 hover:text-slate-600 transition-colors focus:outline-none"
@@ -210,8 +210,8 @@ const Register = () => {
                   </div>
                 </div>
 
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   disabled={loading}
                   className="w-full btn-primary !py-4 mt-4 disabled:opacity-50 disabled:cursor-not-allowed group"
                 >
@@ -220,10 +220,10 @@ const Register = () => {
                 </button>
               </form>
             ) : (
-              <motion.form 
+              <motion.form
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                className="space-y-6" 
+                className="space-y-6"
                 onSubmit={handleSubmit}
               >
                 <div className="text-center mb-8">
@@ -231,32 +231,32 @@ const Register = () => {
                     <Mail className="w-8 h-8" />
                   </div>
                   <h3 className="text-xl font-bold text-slate-900">Verify Your Email</h3>
-                  <p className="text-sm text-slate-500">We've sent a verification code to <br/> <span className="font-bold text-slate-900">{formData.email}</span></p>
+                  <p className="text-sm text-slate-500">We've sent a verification code to <br /> <span className="font-bold text-slate-900">{formData.email}</span></p>
                 </div>
-                
+
                 <div className="space-y-2">
                   <label className="text-xs font-bold text-slate-500 uppercase tracking-wider text-center block mb-4">Enter 6-Digit Code</label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     maxLength="6"
                     required
                     autoFocus
                     value={otp}
                     onChange={(e) => setOtp(e.target.value)}
-                    placeholder="000000" 
-                    className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-4 text-center text-3xl tracking-[0.5em] font-bold focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 outline-none transition-all" 
+                    placeholder="000000"
+                    className="w-full bg-slate-50 border-2 border-slate-100 rounded-2xl py-4 text-center text-3xl tracking-[0.5em] font-bold focus:border-blue-500 focus:ring-4 focus:ring-blue-500/5 outline-none transition-all"
                   />
                 </div>
 
-                <button 
-                  type="submit" 
+                <button
+                  type="submit"
                   disabled={loading || otp.length !== 6}
                   className="w-full btn-primary !bg-blue-600 !py-4 mt-6 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-500/20"
                 >
                   {loading ? 'Verifying...' : 'Complete Registration'}
                 </button>
-                
-                <button 
+
+                <button
                   type="button"
                   onClick={() => setStep(1)}
                   className="w-full text-sm text-slate-400 font-bold hover:text-slate-600 transition-colors"

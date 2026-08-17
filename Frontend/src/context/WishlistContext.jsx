@@ -7,8 +7,13 @@ export const WishlistProvider = ({ children }) => {
   const [wishlist, setWishlist] = useState([]);
 
   const getStorageKey = () => {
-    const userData = JSON.parse(localStorage.getItem('userData'));
-    return userData ? `rentease_wishlist_${userData.email}` : 'rentease_wishlist';
+    try {
+      const raw = localStorage.getItem('userData');
+      const userData = raw ? JSON.parse(raw) : null;
+      return userData?.email ? `rentease_wishlist_${userData.email}` : 'rentease_wishlist';
+    } catch {
+      return 'rentease_wishlist';
+    }
   };
 
   useEffect(() => {
@@ -43,7 +48,7 @@ export const WishlistProvider = ({ children }) => {
     const productId = product._id || product.id;
     const exists = wishlist.find(item => (item._id || item.id) === productId);
     const key = getStorageKey();
-    
+
     if (exists) {
       const updated = wishlist.filter(item => (item._id || item.id) !== productId);
       setWishlist(updated);
