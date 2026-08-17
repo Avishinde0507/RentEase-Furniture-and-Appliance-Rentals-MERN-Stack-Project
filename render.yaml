@@ -1,0 +1,49 @@
+services:
+  # ─── Backend API (Node.js Web Service) ───────────────────────────────────────
+  - type: web
+    name: rentease-backend
+    runtime: node
+    rootDir: Backend
+    buildCommand: npm install
+    startCommand: node server.js
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5001
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: RAZORPAY_KEY_ID
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_PASS
+        sync: false
+      - key: CLIENT_URL
+        value: https://rentease-furniture-and-appliance-rentals.onrender.com
+
+  # ─── Frontend (Static Site) ──────────────────────────────────────────────────
+  - type: web
+    name: rentease-furniture-and-appliance-rentals
+    runtime: static
+    rootDir: Frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    pullRequestPreviewsEnabled: true
+    headers:
+      - path: /assets/*
+        name: Cache-Control
+        value: public, max-age=31536000, immutable
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    envVars:
+      - key: VITE_API_BASE_URL
+        value: https://rentease-furniture-and-appliance-rentals.onrender.com/api
