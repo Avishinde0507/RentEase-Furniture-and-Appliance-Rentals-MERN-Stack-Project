@@ -48,10 +48,10 @@ export const CartProvider = ({ children }) => {
       // Check if item already exists with same tenure
       const existingItem = prev.find(item => item.id === product.id && item.tenure === tenure);
       if (existingItem) {
-        return prev.map(item =>
-          (item.id === product.id && item.tenure === tenure)
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
+        return prev.map(item => 
+          (item.id === product.id && item.tenure === tenure) 
+          ? { ...item, quantity: item.quantity + 1 } 
+          : item
         );
       }
       return [...prev, { ...product, tenure, rent, quantity: 1 }];
@@ -64,10 +64,10 @@ export const CartProvider = ({ children }) => {
 
   const updateQuantity = (id, tenure, quantity) => {
     if (quantity < 1) return;
-    setCartItems(prev => prev.map(item =>
-      (item.id === id && item.tenure === tenure)
-        ? { ...item, quantity }
-        : item
+    setCartItems(prev => prev.map(item => 
+      (item.id === id && item.tenure === tenure) 
+      ? { ...item, quantity } 
+      : item
     ));
   };
 
@@ -77,8 +77,8 @@ export const CartProvider = ({ children }) => {
   const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
-    <CartContext.Provider value={{
-      cartItems, addToCart, removeFromCart, updateQuantity, clearCart, cartTotal, cartCount
+    <CartContext.Provider value={{ 
+      cartItems, addToCart, removeFromCart, updateQuantity, clearCart, cartTotal, cartCount 
     }}>
       {children}
     </CartContext.Provider>

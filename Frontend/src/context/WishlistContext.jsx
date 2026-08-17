@@ -48,7 +48,7 @@ export const WishlistProvider = ({ children }) => {
     const productId = product._id || product.id;
     const exists = wishlist.find(item => (item._id || item.id) === productId);
     const key = getStorageKey();
-
+    
     if (exists) {
       const updated = wishlist.filter(item => (item._id || item.id) !== productId);
       setWishlist(updated);

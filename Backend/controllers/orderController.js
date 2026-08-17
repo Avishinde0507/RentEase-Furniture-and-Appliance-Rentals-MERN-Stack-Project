@@ -104,7 +104,7 @@ exports.createOrder = async (req, res) => {
 // @route   GET /api/orders/all
 exports.getAllOrders = async (req, res) => {
     try {
-        const orders = await Order.find().sort({ createdAt: -1 });
+        const orders = await Order.find().sort({ createdAt: -1 }).lean();
         res.json(orders);
     } catch (error) {
         res.status(500).json({ message: 'Failed to fetch orders' });

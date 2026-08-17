@@ -29,9 +29,9 @@ const createPrimaryTransporter = () => {
         },
         family: 4,
         lookup: customDnsLookup,
-        connectionTimeout: 5000,
-        greetingTimeout: 5000,
-        socketTimeout: 8000,
+        connectionTimeout: 2500,
+        greetingTimeout: 2500,
+        socketTimeout: 3000,
         tls: {
             rejectUnauthorized: false
         }
@@ -50,9 +50,9 @@ const createFallbackTransporter = () => {
         },
         family: 4,
         lookup: customDnsLookup,
-        connectionTimeout: 5000,
-        greetingTimeout: 5000,
-        socketTimeout: 8000,
+        connectionTimeout: 2500,
+        greetingTimeout: 2500,
+        socketTimeout: 3000,
         tls: {
             rejectUnauthorized: false
         }
