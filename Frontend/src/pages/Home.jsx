@@ -57,21 +57,21 @@ const Home = () => {
   ];
 
   useEffect(() => {
-    const saved = localStorage.getItem('rentease_reviews');
-    if (saved) {
-      setReviews(JSON.parse(saved));
-    } else {
-      const initial = [
-        { name: 'Anurag', rating: 5, text: 'The ownership transfer process at RentEase was smooth, well structured, and efficient. Clear documentation, timely knowledge transfer sessions, and proactive support from both teams ensured a seamless handover with zero disruption.' },
-        { name: 'Ayushee Manhas', rating: 5, text: 'Best service and premium quality products delivered right on time!' },
-        { name: 'Shubham Katiyar', rating: 5, text: 'I\'ve had a great experience with RentEase and would definitely recommend their services to anyone looking to rent furniture or appliances.' },
-        { name: 'Deshpande Onkar S...', rating: 5, text: 'Impressed with RentEase\'s next-day delivery! Got my furniture delivered the very next day as promised.' },
-        { name: 'Ilavarasan A', rating: 5, text: 'Excellent service and prompt customer support!' },
-        { name: 'Balwant Rautela', rating: 5, text: 'Hassle free experience, top notch furniture condition.' },
-        { name: 'Aakash', rating: 5, text: 'Great service and very affordable monthly prices.' }
-      ];
+    try {
+      const saved = localStorage.getItem('rentease_reviews');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setReviews(parsed);
+        } else {
+          setReviews(initial);
+        }
+      } else {
+        setReviews(initial);
+        localStorage.setItem('rentease_reviews', JSON.stringify(initial));
+      }
+    } catch {
       setReviews(initial);
-      localStorage.setItem('rentease_reviews', JSON.stringify(initial));
     }
 
     if (window.location.hash) {
@@ -263,10 +263,15 @@ const Home = () => {
                   <div key={i} className="bg-white p-7 rounded-3xl border border-slate-100 shadow-sm hover:shadow-md transition-shadow">
                     <h4 className="font-bold text-slate-900 text-base mb-1">{r.name}</h4>
                     <div className="flex items-center gap-1 text-amber-400 mb-3">
-                      <span className="text-slate-900 font-bold text-xs mr-1">{r.rating.toFixed(1)}</span>
-                      {[...Array(5)].map((_, starIdx) => (
-                        <Star key={starIdx} className={`w-3.5 h-3.5 ${starIdx < r.rating ? 'fill-current' : 'text-slate-200'}`} />
-                      ))}
+                      <span className="text-slate-900 font-bold text-xs mr-1">
+                        {(typeof r.rating === 'number' ? r.rating : (parseFloat(r.rating) || 5)).toFixed(1)}
+                      </span>
+                      {[...Array(5)].map((_, starIdx) => {
+                        const rVal = typeof r.rating === 'number' ? r.rating : (parseFloat(r.rating) || 5);
+                        return (
+                          <Star key={starIdx} className={`w-3.5 h-3.5 ${starIdx < rVal ? 'fill-current' : 'text-slate-200'}`} />
+                        );
+                      })}
                     </div>
                     <p className="text-slate-600 text-sm leading-relaxed italic">"{r.text}"</p>
                   </div>
