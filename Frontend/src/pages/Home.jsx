@@ -1,13 +1,34 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Star, ShieldCheck, Truck, Clock, IndianRupee, Globe, Heart, Mail, Phone, MapPin, Send } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { API_BASE_URL } from '../apiConfig';
 
+const initialReviews = [
+  { id: 1, name: 'Anurag', rating: 5, text: 'The ownership transfer process at RentEase was smooth, well structured, and efficient. Clear documentation, timely knowledge transfer sessions, and proactive support from both teams ensured a seamless handover with zero disruption.', date: '20 Apr 2024' },
+  { id: 2, name: 'Deshpande Onkar S...', rating: 5, text: "Impressed with RentEase's next-day delivery! The process was smooth and super quick. Got my furniture delivered the very next day as promised. Efficient, reliable, and perfect for urgent needs!", date: '22 Apr 2024' },
+  { id: 3, name: 'Shubham Katiyar', rating: 5, text: "I've had a great experience with RentEase and would definitely recommend their services to anyone looking to rent furniture or appliances. From placing the order to delivery and installation, everything was seamless and professional.", date: '23 Apr 2024' },
+  { id: 4, name: 'Ayushee Manhas', rating: 5, text: 'Best platform for temporary furniture needs. Very professional and helpful team.', date: '24 Apr 2024' },
+  { id: 5, name: 'Ilavarasan A', rating: 5, text: 'Excellent service and top quality appliances delivered on time.', date: '25 Apr 2024' }
+];
+
 const Home = () => {
   const navigate = useNavigate();
-  const [reviews, setReviews] = useState([]);
+  const [reviews] = useState(() => {
+    try {
+      const saved = localStorage.getItem('rentease_reviews');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          return parsed;
+        }
+      }
+    } catch {
+      // ignore
+    }
+    return initialReviews;
+  });
   const [contactForm, setContactForm] = useState({ name: '', email: '', subject: '', message: '' });
   const [isSubmittingContact, setIsSubmittingContact] = useState(false);
 
@@ -59,19 +80,11 @@ const Home = () => {
   useEffect(() => {
     try {
       const saved = localStorage.getItem('rentease_reviews');
-      if (saved) {
-        const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setReviews(parsed);
-        } else {
-          setReviews(initial);
-        }
-      } else {
-        setReviews(initial);
-        localStorage.setItem('rentease_reviews', JSON.stringify(initial));
+      if (!saved) {
+        localStorage.setItem('rentease_reviews', JSON.stringify(initialReviews));
       }
     } catch {
-      setReviews(initial);
+      // ignore
     }
 
     if (window.location.hash) {
@@ -84,7 +97,7 @@ const Home = () => {
   }, []);
 
   const columns = [[], [], []];
-  reviews.forEach((r, i) => columns[i % 3].push(r));
+  (Array.isArray(reviews) ? reviews : initialReviews).forEach((r, i) => columns[i % 3].push(r));
 
   return (
     <div className="overflow-x-hidden bg-slate-50">

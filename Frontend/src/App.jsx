@@ -38,6 +38,48 @@ const PageLoader = () => (
   </div>
 );
 
+// Global Error Boundary to prevent blank screen crashes
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false };
+  }
+
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+
+  componentDidCatch(error, errorInfo) {
+    console.error('Application Error:', error, errorInfo);
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-slate-50 text-center">
+          <div className="w-14 h-14 bg-red-100 text-[var(--primary)] rounded-2xl flex items-center justify-center mb-4 text-2xl font-bold">
+            !
+          </div>
+          <h1 className="text-2xl font-bold text-slate-900 mb-2">Something went wrong</h1>
+          <p className="text-slate-600 mb-6 max-w-md text-sm">
+            We encountered an unexpected error. Please refresh the page to continue.
+          </p>
+          <button
+            onClick={() => {
+              this.setState({ hasError: false });
+              window.location.reload();
+            }}
+            className="btn-primary px-6 py-2.5 text-sm"
+          >
+            Refresh Page
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 // Scroll to top on route change
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -58,42 +100,44 @@ function App() {
   }, []);
 
   return (
-    <ProductProvider>
-      <WishlistProvider>
-        <CartProvider>
-          <Router>
-            <ScrollToTop />
-            <div className="flex flex-col min-h-screen">
-              <Toaster position="top-right" />
-              <Navbar />
-              <main className="flex-grow">
-                <Suspense fallback={<PageLoader />}>
-                  <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/products" element={<ProductListing />} />
-                    <Route path="/product/:id" element={<ProductDetails />} />
-                    <Route path="/cart" element={<Cart />} />
-                    <Route path="/wishlist" element={<Wishlist />} />
-                    <Route path="/checkout" element={<Checkout />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/forgot-password" element={<ForgotPassword />} />
-                    <Route path="/profile" element={<Profile />} />
-                    <Route path="/my-rentals" element={<MyRentals />} />
-                    <Route path="/maintenance" element={<Maintenance />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/contact" element={<Contact />} />
-                    <Route path="/dashboard" element={<CustomerDashboard />} />
-                    <Route path="/admin/*" element={<AdminDashboard />} />
-                  </Routes>
-                </Suspense>
-              </main>
-              <Footer />
-            </div>
-          </Router>
-        </CartProvider>
-      </WishlistProvider>
-    </ProductProvider>
+    <ErrorBoundary>
+      <ProductProvider>
+        <WishlistProvider>
+          <CartProvider>
+            <Router>
+              <ScrollToTop />
+              <div className="flex flex-col min-h-screen">
+                <Toaster position="top-right" />
+                <Navbar />
+                <main className="flex-grow">
+                  <Suspense fallback={<PageLoader />}>
+                    <Routes>
+                      <Route path="/" element={<Home />} />
+                      <Route path="/products" element={<ProductListing />} />
+                      <Route path="/product/:id" element={<ProductDetails />} />
+                      <Route path="/cart" element={<Cart />} />
+                      <Route path="/wishlist" element={<Wishlist />} />
+                      <Route path="/checkout" element={<Checkout />} />
+                      <Route path="/login" element={<Login />} />
+                      <Route path="/register" element={<Register />} />
+                      <Route path="/forgot-password" element={<ForgotPassword />} />
+                      <Route path="/profile" element={<Profile />} />
+                      <Route path="/my-rentals" element={<MyRentals />} />
+                      <Route path="/maintenance" element={<Maintenance />} />
+                      <Route path="/about" element={<About />} />
+                      <Route path="/contact" element={<Contact />} />
+                      <Route path="/dashboard" element={<CustomerDashboard />} />
+                      <Route path="/admin/*" element={<AdminDashboard />} />
+                    </Routes>
+                  </Suspense>
+                </main>
+                <Footer />
+              </div>
+            </Router>
+          </CartProvider>
+        </WishlistProvider>
+      </ProductProvider>
+    </ErrorBoundary>
   );
 }
 
