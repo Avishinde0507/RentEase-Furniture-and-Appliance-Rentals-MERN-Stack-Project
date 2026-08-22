@@ -16,15 +16,19 @@ A full-stack rental management web application built with the **MERN** stack (Mo
 
 ---
 Home Page 
+
 <img width="1914" height="837" alt="image" src="https://github.com/user-attachments/assets/9e21c545-f35d-4400-9e9e-46beda431965" />
 
 Registration Page
+
 <img width="1920" height="900" alt="image" src="https://github.com/user-attachments/assets/76ec727f-d9b1-4f8b-bc5f-dca9b3ca1334" />
 
 login Page
+
 <img width="1920" height="928" alt="image" src="https://github.com/user-attachments/assets/04e6065f-6df6-43f2-84a4-8f7221a802f0" />
 
 Admin Dashboard Page 
+
 <img width="1920" height="915" alt="image" src="https://github.com/user-attachments/assets/8766424d-71cc-4579-b745-2d962cc66369" />
 
 
